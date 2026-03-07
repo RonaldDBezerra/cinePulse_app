@@ -22,6 +22,7 @@ export default function LoginScreen() {
       setLoading(true);
       setError("");
       await login(email, password);
+      router.replace("/(protected)");
     } catch (err: any) {
       console.error("Erro ao fazer login:", err);
       setError("Email ou senha inválidos");
