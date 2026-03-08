@@ -1,0 +1,134 @@
+import Separator from "@/components/Separator"
+import { getTopRated, getTrending, getTrendingSeries } from "@/services/tmdb"
+import { colors } from "@/styles/colors"
+import { useEffect, useState } from "react"
+import {
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native"
+import ContentCards from "../../components/ContentCards"
+
+
+export default function Home() {
+
+    const [topMovies, setTopMovies] = useState<any[]>([])
+    const [pageTopMovies, setPageTopMovies] = useState(1)
+
+    const [ratedMovies, setRatedMovies] = useState<any[]>([])
+    const [pageRatedMovies, setPageRatedMovies] = useState(1)
+
+    const [trendingSeries, setTrendingSeries] = useState<any[]>([])
+    const [pageTrendingSeries, setPageTrendingSeries] = useState(1)
+
+    const [loading, setLoading] = useState(true)
+
+    async function loadTopMovies(nextPage = 1) {
+        const { data } = await getTrending(nextPage)
+
+        if (nextPage === 1) {
+            setTopMovies(data.results)
+        } else {
+            setTopMovies(prev => [...prev, ...data.results])
+        }
+
+        setLoading(false)
+    }
+
+    async function loadRatedMovies(nextPage = 1) {
+        const { data } = await getTopRated(nextPage)
+        if (nextPage === 1) {
+            setRatedMovies(data.results)
+        } else {
+            setRatedMovies(prev => [...prev, ...data.results])
+        }
+    }
+
+    async function loadTrendingSeries(nextPage = 1) {
+        const { data } = await getTrendingSeries(nextPage)
+        if (nextPage === 1) {
+            setTrendingSeries(data.results)
+        } else {
+            setTrendingSeries(prev => [...prev, ...data.results])
+        }
+    }
+
+    useEffect(() => {
+        loadTopMovies()
+        loadRatedMovies()
+        loadTrendingSeries()
+    }, [])
+
+    function loadMoreTopMovies() {
+        const next = pageTopMovies + 1
+        setPageTopMovies(next)
+        loadTopMovies(next)
+    }
+
+    function loadMoreRatedMovies() {
+        const next = pageRatedMovies + 1
+        setPageRatedMovies(next)
+        loadRatedMovies(next)
+    }
+
+    function loadMoreTrendingSeries() {
+        const next = pageTrendingSeries + 1
+        setPageTrendingSeries(next)
+        loadTrendingSeries(next)
+    }
+
+    if (loading) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>Carregando...</Text>
+            </View>
+        )
+    }
+
+    return (
+        <ScrollView style={styles.container}>
+
+            <ContentCards
+                title="Trending Movies"
+                movies={topMovies}
+                loadMore={loadMoreTopMovies}
+            />
+
+            <Separator />
+
+            <ContentCards
+                title="Top Rated Movies"
+                movies={ratedMovies}
+                loadMore={loadMoreRatedMovies}
+            />
+
+            <Separator />
+
+            <ContentCards
+                title="Trending Series"
+                movies={trendingSeries}
+                loadMore={loadMoreTrendingSeries}
+            />
+
+
+
+        </ScrollView>
+    )
+}
+
+const styles = StyleSheet.create({
+    title: {
+        fontSize: 32,
+        fontWeight: "bold",
+        color: colors.primary,
+        textAlign: "center",
+        marginBottom: 40,
+    },
+    container: {
+        flex: 1,
+        backgroundColor: colors.background,
+        paddingTop: 2,
+        paddingHorizontal: 16
+    },
+})
