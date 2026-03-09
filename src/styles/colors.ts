@@ -7,5 +7,5 @@ export const colors = {
   white: "#FFFFFF",
   black: "#000000",
   textSecond: "#FFD700",
-  skeleton: "#1E1E1E"
+  skeleton: "#887c7c"
 };
