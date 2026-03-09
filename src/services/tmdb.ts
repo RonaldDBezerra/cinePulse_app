@@ -28,3 +28,6 @@ export const getTopRated = (page = 1) =>
 
 export const getMovieDetails = (id: number) =>
     api.get(`/movie/${id}`);
+
+export const getSerieDetails = (id: number) =>
+    api.get(`/tv/${id}`);
