@@ -8,6 +8,7 @@ import {
     Text,
     View,
 } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ContentCards from "../../components/ContentCards"
 
 
@@ -24,6 +25,8 @@ export default function Home() {
 
     const [loading, setLoading] = useState(true)
 
+    const { bottom } = useSafeAreaInsets();
+    
     async function loadTopMovies(nextPage = 1) {
         const { data } = await getTrending(nextPage)
 
@@ -87,28 +90,31 @@ export default function Home() {
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: bottom + 10 }}>
 
             <ContentCards
                 title="Trending Movies"
-                movies={topMovies}
+                data={topMovies}
                 loadMore={loadMoreTopMovies}
+                category="movie"
             />
 
             <Separator />
 
             <ContentCards
                 title="Top Rated Movies"
-                movies={ratedMovies}
+                data={ratedMovies}
                 loadMore={loadMoreRatedMovies}
+                category="movie"
             />
 
             <Separator />
 
             <ContentCards
                 title="Trending Series"
-                movies={trendingSeries}
+                data={trendingSeries}
                 loadMore={loadMoreTrendingSeries}
+                category="serie"
             />
 
 
