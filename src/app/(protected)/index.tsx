@@ -1,12 +1,11 @@
+import HomeSkeleton from "@/components/HomeSkeleton"
 import Separator from "@/components/Separator"
 import { getTopRated, getTrending, getTrendingSeries } from "@/services/tmdb"
 import { colors } from "@/styles/colors"
 import { useEffect, useState } from "react"
 import {
     ScrollView,
-    StyleSheet,
-    Text,
-    View,
+    StyleSheet
 } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ContentCards from "../../components/ContentCards"
@@ -82,11 +81,7 @@ export default function Home() {
     }
 
     if (loading) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>Carregando...</Text>
-            </View>
-        )
+        return <HomeSkeleton />
     }
 
     return (
