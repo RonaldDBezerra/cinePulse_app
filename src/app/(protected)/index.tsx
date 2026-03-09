@@ -1,6 +1,6 @@
 import HomeSkeleton from "@/components/HomeSkeleton"
 import Separator from "@/components/Separator"
-import { getTopRated, getTrending, getTrendingSeries } from "@/services/tmdb"
+import { getTopRated, getTopRatedSeries, getTrending, getTrendingSeries } from "@/services/tmdb"
 import { colors } from "@/styles/colors"
 import { useEffect, useState } from "react"
 import {
@@ -22,6 +22,9 @@ export default function Home() {
     const [trendingSeries, setTrendingSeries] = useState<any[]>([])
     const [pageTrendingSeries, setPageTrendingSeries] = useState(1)
 
+    const [ratedSeries, setRatedSeries] = useState<any[]>([])
+    const [pageRatedSeries, setPageRatedSeries] = useState(1)
+
     const [loading, setLoading] = useState(true)
 
     const { bottom } = useSafeAreaInsets();
@@ -40,6 +43,7 @@ export default function Home() {
 
     async function loadRatedMovies(nextPage = 1) {
         const { data } = await getTopRated(nextPage)
+
         if (nextPage === 1) {
             setRatedMovies(data.results)
         } else {
@@ -49,6 +53,7 @@ export default function Home() {
 
     async function loadTrendingSeries(nextPage = 1) {
         const { data } = await getTrendingSeries(nextPage)
+
         if (nextPage === 1) {
             setTrendingSeries(data.results)
         } else {
@@ -56,10 +61,21 @@ export default function Home() {
         }
     }
 
+    async function loadRatedSeries(nextPage = 1) {
+        const { data } = await getTopRatedSeries(nextPage)
+
+        if (nextPage === 1) {
+            setRatedSeries(data.results)
+        } else {
+            setRatedSeries(prev => [...prev, ...data.results])
+        }
+    }
+
     useEffect(() => {
         loadTopMovies()
         loadRatedMovies()
         loadTrendingSeries()
+        loadRatedSeries()
     }, [])
 
     function loadMoreTopMovies() {
@@ -78,6 +94,12 @@ export default function Home() {
         const next = pageTrendingSeries + 1
         setPageTrendingSeries(next)
         loadTrendingSeries(next)
+    }
+
+    function loadMoreRatedSeries() {
+        const next = pageRatedSeries + 1
+        setPageRatedSeries(next)
+        loadRatedSeries(next)
     }
 
     if (loading) {
@@ -112,7 +134,14 @@ export default function Home() {
                 category="serie"
             />
 
+            <Separator />
 
+            <ContentCards
+                title="Series - Bem avaliadas"
+                data={ratedSeries}
+                loadMore={loadMoreRatedSeries}
+                category="serie"
+            />
 
         </ScrollView>
     )
