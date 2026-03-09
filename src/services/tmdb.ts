@@ -26,6 +26,9 @@ export const getTrendingSeries = (page = 1) =>
 export const getTopRated = (page = 1) =>
     api.get("/movie/top_rated", { params: { page } });
 
+export const getTopRatedSeries = (page = 1) =>
+    api.get("/tv/top_rated", { params: { page } });
+
 export const getMovieDetails = (id: number) =>
     api.get(`/movie/${id}`);
 
