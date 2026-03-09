@@ -5,18 +5,19 @@ import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react
 
 type ContentCardsProps = {
     title: string
-    movies: any[]
+    data: any[]
     loadMore: () => void
+    category: string
 }
 
-export default function ContentCards({ title, movies, loadMore }: ContentCardsProps) {
+export default function ContentCards({ title, data, loadMore, category }: ContentCardsProps) {
     const router = useRouter()
     return (
         <>
             <Text style={styles.header}>{title}</Text>
 
             <FlatList
-                data={movies}
+                data={data}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 style={{ height: 210 }}
@@ -26,7 +27,7 @@ export default function ContentCards({ title, movies, loadMore }: ContentCardsPr
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={styles.card}
-                        onPress={() => router.push({ pathname: "/(protected)/details/[id]", params: { id: item.id } })}
+                        onPress={() => router.push({ pathname: "/(protected)/details/[id]", params: { id: item.id, category } })}
                     >
                         <Image
                             source={{ uri: getImage(item.poster_path) }}
