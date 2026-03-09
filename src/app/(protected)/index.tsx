@@ -88,7 +88,7 @@ export default function Home() {
         <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: bottom + 10 }}>
 
             <ContentCards
-                title="Trending Movies"
+                title="Filmes - Populares"
                 data={topMovies}
                 loadMore={loadMoreTopMovies}
                 category="movie"
@@ -97,7 +97,7 @@ export default function Home() {
             <Separator />
 
             <ContentCards
-                title="Top Rated Movies"
+                title="Filmes - Bem avaliados"
                 data={ratedMovies}
                 loadMore={loadMoreRatedMovies}
                 category="movie"
@@ -106,7 +106,7 @@ export default function Home() {
             <Separator />
 
             <ContentCards
-                title="Trending Series"
+                title="Series - Populares"
                 data={trendingSeries}
                 loadMore={loadMoreTrendingSeries}
                 category="serie"
