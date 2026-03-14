@@ -27,7 +27,7 @@ export default function ContentCards({ title, data, loadMore, category }: Conten
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={styles.card}
-                        onPress={() => router.push({ pathname: "/(protected)/details/[id]", params: { id: item.id, category } })}
+                        onPress={() => router.push({ pathname: "/(protected)/(stack_routes)/details/[id]", params: { id: item.id, category } })}
                     >
                         <Image
                             source={{ uri: getImage(item.poster_path) }}
