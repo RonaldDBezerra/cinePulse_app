@@ -3,7 +3,7 @@ import { colors } from "@/styles/colors";
 import { Redirect, Stack } from "expo-router";
 import { useContext } from "react";
 import { ActivityIndicator, View } from "react-native";
-
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function ProtectedLayout() {
   const { user, loading } = useContext(AuthContext);
@@ -21,9 +21,11 @@ export default function ProtectedLayout() {
   }
 
   return (
-    <Stack screenOptions={{headerStyle: { backgroundColor: colors.black }, headerTintColor: colors.white }} >
-        <Stack.Screen name="index" options={{ headerTitle: "Home" }} />
-        <Stack.Screen name="details/[id]/index" options={{ headerTitle: "Detalhes" }} />
-    </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Stack screenOptions={{ headerShown: false, animation: "none", contentStyle: { backgroundColor: colors.background } }}>
+        <Stack.Screen name="(drawer)" />
+        <Stack.Screen name="(stack_routes)" />
+      </Stack>
+    </GestureHandlerRootView>
   );
 }
