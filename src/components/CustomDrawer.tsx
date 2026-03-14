@@ -16,7 +16,8 @@ type MenuItem = {
 };
 
 const menuItems: MenuItem[] = [
-    { label: "Home", icon: "🏠", route: "/(protected)/(drawer)" },
+    { label: "Filmes", icon: "🎬", route: "/(protected)/(drawer)/filmes" },
+    { label: "Séries", icon: "📺", route: "/(protected)/(drawer)/series" },
     { label: "Configurações", icon: "⚙️", route: "/(protected)/(drawer)/settings" },
 ];
 

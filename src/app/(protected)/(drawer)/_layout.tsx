@@ -14,14 +14,16 @@ export default function DrawerLayout() {
         headerLeft: () => (
           <TouchableOpacity
             onPress={() => navigation.toggleDrawer()}
-            style={{ marginLeft: 16 }}
+            style={{ marginHorizontal: 16 }}
           >
-            <Text style={{ color: colors.white, fontSize: 22 }}>☰</Text>
+            <Text style={{ color: colors.white, fontSize: 25 }}>☰</Text>
           </TouchableOpacity>
         ),
       })}
     >
-      <Drawer.Screen name="index" options={{ headerTitle: "CinePulse" }} />
+      <Drawer.Screen name="index" />
+      <Drawer.Screen name="filmes" options={{ headerTitle: "Filmes" }} />
+      <Drawer.Screen name="series" options={{ headerTitle: "Séries" }} />
       <Drawer.Screen name="settings" options={{ headerTitle: "Configurações" }} />
     </Drawer>
   );
