@@ -7,5 +7,7 @@ export const colors = {
   white: "#FFFFFF",
   black: "#000000",
   textSecond: "#FFD700",
-  skeleton: "#887c7c"
+  skeleton: "#887c7c",
+  versionText: "#666",
+  warningText: "#CCC",
 };

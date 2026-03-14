@@ -1,4 +1,5 @@
 import { logout } from "@/services/auth";
+import { colors } from "@/styles/colors";
 import { router } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -33,30 +34,30 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#0F0F0F",
+        backgroundColor: colors.background,
         padding: 20,
     },
     title: {
-        color: "#FFF",
+        color: colors.white,
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 30,
     },
     button: {
-        backgroundColor: "#1C1C1C",
+        backgroundColor: colors.card,
         padding: 16,
         borderRadius: 12,
         marginBottom: 15,
     },
     buttonText: {
-        color: "#FFF",
+        color: colors.white,
         fontSize: 16,
     },
     logout: {
         marginTop: 30,
     },
     logoutText: {
-        color: "#E50914",
+        color: colors.primary,
         fontSize: 16,
     },
 });

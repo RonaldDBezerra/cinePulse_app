@@ -1,4 +1,5 @@
 import { deleteAccount, getCurrentUser, logout } from "@/services/auth";
+import { colors } from "@/styles/colors";
 import React, { useState } from "react";
 import {
     Alert,
@@ -64,28 +65,28 @@ export default function DeleteAccountScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#0F0F0F",
+        backgroundColor: colors.background,
         padding: 20,
     },
     title: {
-        color: "#FFF",
+        color: colors.white,
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 20,
     },
     warning: {
-        color: "#CCC",
+        color: colors.warningText,
         fontSize: 15,
         marginBottom: 30,
     },
     button: {
-        backgroundColor: "#E50914",
+        backgroundColor: colors.primary,
         padding: 16,
         borderRadius: 12,
         alignItems: "center",
     },
     buttonText: {
-        color: "#FFF",
+        color: colors.white,
         fontSize: 16,
         fontWeight: "bold",
     },
