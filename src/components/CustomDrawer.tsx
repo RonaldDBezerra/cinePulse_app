@@ -8,6 +8,7 @@ import {
 import { useRouter } from "expo-router";
 import { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Separator from "./Separator";
 
 type MenuItem = {
     label: string;
@@ -46,7 +47,7 @@ export default function CustomDrawer(props: DrawerContentComponentProps) {
                 </Text>
             </View>
 
-            <View style={styles.divider} />
+            <Separator />
 
             <View style={styles.menu}>
                 {menuItems.map((item) => (
@@ -64,7 +65,7 @@ export default function CustomDrawer(props: DrawerContentComponentProps) {
                 ))}
             </View>
 
-            <View style={styles.divider} />
+            <Separator />
 
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                 <Text style={styles.logoutIcon}>🚪</Text>
@@ -107,12 +108,6 @@ const styles = StyleSheet.create({
     email: {
         color: colors.textSecondary,
         fontSize: 13,
-    },
-
-    divider: {
-        height: 1,
-        backgroundColor: "#333",
-        marginVertical: 8,
     },
 
     menu: {
