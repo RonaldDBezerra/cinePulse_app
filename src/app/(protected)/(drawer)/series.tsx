@@ -1,7 +1,7 @@
 import ContentCards from "@/components/ContentCards"
 import HomeSkeleton from "@/components/HomeSkeleton"
 import Separator from "@/components/Separator"
-import { getTopRatedSeries, getTrendingSeries } from "@/services/tmdb"
+import { getSeriesNowPlaying, getTopRatedSeries, getTrendingSeries } from "@/services/tmdb"
 import { colors } from "@/styles/colors"
 import { useEffect, useState } from "react"
 import {
@@ -18,6 +18,9 @@ export default function SeriesScreen() {
 
     const [ratedSeries, setRatedSeries] = useState<any[]>([])
     const [pageRatedSeries, setPageRatedSeries] = useState(1)
+
+    const [airingTodaySeries, setAiringTodaySeries] = useState<any[]>([])
+    const [pageAiringTodaySeries, setPageAiringTodaySeries] = useState(1)
 
     const [loading, setLoading] = useState(true)
 
@@ -44,11 +47,22 @@ export default function SeriesScreen() {
         }
     }
 
+    async function loadAiringTodaySeries(nextPage = 1) {
+        const { data } = await getSeriesNowPlaying(nextPage)
+
+        if (nextPage === 1) {
+            setAiringTodaySeries(data.results)
+        } else {
+            setAiringTodaySeries(prev => [...prev, ...data.results])
+        }
+    }
+
     useEffect(() => {
         async function fetchData() {
             await Promise.all([
                 loadTrendingSeries(),
-                loadRatedSeries()
+                loadRatedSeries(),
+                loadAiringTodaySeries()
             ]);
             setLoading(false);
         }
@@ -66,6 +80,12 @@ export default function SeriesScreen() {
         const next = pageRatedSeries + 1
         setPageRatedSeries(next)
         loadRatedSeries(next)
+    }
+
+    function loadMoreAiringTodaySeries() {
+        const next = pageAiringTodaySeries + 1
+        setPageAiringTodaySeries(next)
+        loadAiringTodaySeries(next)
     }
 
     if (loading) {
@@ -88,6 +108,15 @@ export default function SeriesScreen() {
                 title="Series - Bem avaliadas"
                 data={ratedSeries}
                 loadMore={loadMoreRatedSeries}
+                category="serie"
+            />
+
+            <Separator />
+
+            <ContentCards
+                title="Series - Em exibição"
+                data={airingTodaySeries}
+                loadMore={loadMoreAiringTodaySeries}
                 category="serie"
             />
 
