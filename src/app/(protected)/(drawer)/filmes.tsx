@@ -1,7 +1,7 @@
 import ContentCards from "@/components/ContentCards"
 import HomeSkeleton from "@/components/HomeSkeleton"
 import Separator from "@/components/Separator"
-import { getTopRated, getTrending } from "@/services/tmdb"
+import { getMovingNowPlaying, getTopRated, getTrending } from "@/services/tmdb"
 import { colors } from "@/styles/colors"
 import { useEffect, useState } from "react"
 import {
@@ -18,6 +18,9 @@ export default function Filmes() {
 
     const [ratedMovies, setRatedMovies] = useState<any[]>([])
     const [pageRatedMovies, setPageRatedMovies] = useState(1)
+
+    const [nowPlayingMovies, setNowPlayingMovies] = useState<any[]>([])
+    const [pageNowPlayingMovies, setPageNowPlayingMovies] = useState(1)
 
     const [loading, setLoading] = useState(true)
 
@@ -43,11 +46,22 @@ export default function Filmes() {
         }
     }
 
+    async function loadNowPlayingMovies(nextPage = 1) {
+        const { data } = await getMovingNowPlaying(nextPage)
+
+        if (nextPage === 1) {
+            setNowPlayingMovies(data.results)
+        } else {
+            setNowPlayingMovies(prev => [...prev, ...data.results])
+        }
+    }
+
     useEffect(() => {
         async function fetchData() {
             await Promise.all([
                 loadTopMovies(),
-                loadRatedMovies()
+                loadRatedMovies(),
+                loadNowPlayingMovies()
             ]);
             setLoading(false);
         }
@@ -65,6 +79,12 @@ export default function Filmes() {
         const next = pageRatedMovies + 1
         setPageRatedMovies(next)
         loadRatedMovies(next)
+    }
+
+    function loadMoreNowPlayingMovies() {
+        const next = pageNowPlayingMovies + 1
+        setPageNowPlayingMovies(next)
+        loadNowPlayingMovies(next)
     }
 
     if (loading) {
@@ -87,6 +107,15 @@ export default function Filmes() {
                 title="Filmes - Bem avaliados"
                 data={ratedMovies}
                 loadMore={loadMoreRatedMovies}
+                category="movie"
+            />
+
+            <Separator />
+
+            <ContentCards
+                title="Filmes - Em exibição"
+                data={nowPlayingMovies}
+                loadMore={loadMoreNowPlayingMovies}
                 category="movie"
             />
 
