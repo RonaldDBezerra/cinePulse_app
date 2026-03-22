@@ -4,7 +4,27 @@ Aplicativo mobile para explorar filmes e séries, com dados em tempo real da API
 
 ---
 
-## 📱 Funcionalidades
+## � Screenshots
+
+<p align="center">
+  <img src="./asserts/screenshots/login.jpeg" width="220" />
+  <img src="./asserts/screenshots/register.jpeg" width="220" />
+  <img src="./asserts/screenshots/reset.jpeg" width="220" />
+</p>
+
+<p align="center">
+  <img src="./asserts/screenshots/filmes.jpeg" width="220" />
+  <img src="./asserts/screenshots/series.jpeg" width="220" />
+  <img src="./asserts/screenshots/details.jpeg" width="220" />
+
+  <img src="./asserts/screenshots/configuracoes.jpeg" width="220" />
+
+  <img src="./asserts/screenshots/navegacaoLateral.jpeg" width="220" />
+</p>
+
+---
+
+## �📱 Funcionalidades
 
 - **Autenticação completa** — Login, cadastro, recuperação de senha e exclusão de conta via Firebase
 - **Catálogo de Filmes** — Populares, bem avaliados e em exibição nos cinemas
