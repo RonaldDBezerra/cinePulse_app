@@ -10,11 +10,11 @@ export default function ProtectedLayout() {
             <StatusBar style="light" />
             <AuthProvider>
 
-                <Stack screenOptions={{ contentStyle: { backgroundColor: colors.background } }}>
-                    <Stack.Screen name="(protected)" options={{ headerShown: false }} />
-                    <Stack.Screen name="login" options={{ headerShown: false }} />
-                    <Stack.Screen name="register" options={{ headerShown: false }} />
-                    <Stack.Screen name="reset" options={{ headerShown: false }} />
+                <Stack screenOptions={{ contentStyle: { backgroundColor: colors.background }, animation: "none", headerShown: false }}>
+                    <Stack.Screen name="(protected)" />
+                    <Stack.Screen name="login" />
+                    <Stack.Screen name="register" />
+                    <Stack.Screen name="reset" />
                 </Stack>
 
             </AuthProvider>
