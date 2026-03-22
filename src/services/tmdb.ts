@@ -38,5 +38,11 @@ export const getSeriesNowPlaying = (page = 1) =>
 export const getMovieDetails = (id: number) =>
     api.get(`/movie/${id}`);
 
+export const getMovieProviders = (id: number) =>
+    api.get(`/movie/${id}/watch/providers`);
+
 export const getSerieDetails = (id: number) =>
     api.get(`/tv/${id}`);
+
+export const getSerieProviders = (id: number) =>
+    api.get(`/tv/${id}/watch/providers`);

@@ -7,7 +7,7 @@ import {
     View
 } from "react-native";
 
-import { BACKDROP_BASE, getMovieDetails, getSerieDetails, IMAGE_BASE } from "@/services/tmdb";
+import { BACKDROP_BASE, getMovieDetails, getMovieProviders, getSerieDetails, getSerieProviders, IMAGE_BASE } from "@/services/tmdb";
 
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,18 +18,27 @@ import Animated, { FadeInUp } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import DetailsSkeleton from "@/components/DetailsSkeleton";
+import { FlatList } from "react-native-gesture-handler";
 
 export default function DetailsScreen() {
     const { id, category } = useLocalSearchParams();
     const { bottom } = useSafeAreaInsets();
     const [data, setData] = useState<any>(null);
+    const [dataProviders, setDataProviders] = useState<any>(null);
 
     async function loadMovieDetails() {
         if (category === "movie") {
             const { data } = await getMovieDetails(Number(id));
+
+            const providers = await getMovieProviders(Number(id));
+
+            setDataProviders(providers.data.results?.BR);
             setData(data);
         } else if (category === "serie") {
             const { data } = await getSerieDetails(Number(id));
+            const providers = await getSerieProviders(Number(id));
+
+            setDataProviders(providers.data.results?.BR);
             setData(data);
         }
     }
@@ -41,7 +50,7 @@ export default function DetailsScreen() {
     if (!data) return <DetailsSkeleton />;
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: bottom + 10 }}>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container} contentContainerStyle={{ paddingBottom: bottom + 10 }}>
 
             <View style={styles.backdropContainer}>
                 <Image
@@ -76,6 +85,22 @@ export default function DetailsScreen() {
                     <Text style={styles.genre}>
                         {data.genres?.map((g: any) => g.name).join(" / ")}
                     </Text>
+
+                    <View style={{ flexDirection: "row", marginTop: 5, alignItems: "center" }}>
+                        <FlatList
+                            horizontal
+                            data={dataProviders?.flatrate}
+                            showsHorizontalScrollIndicator={false}
+                            keyExtractor={(item) => item.provider_id.toString()}
+                            renderItem={({ item: provider }) => (
+                                <Image
+                                    key={provider.provider_id}
+                                    source={{ uri: IMAGE_BASE + provider.logo_path }}
+                                    style={{ width: 40, height: 40, marginRight: 8 }}
+                                />
+                            )}
+                        />
+                    </View>
                 </View>
             </Animated.View>
 
