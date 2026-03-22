@@ -7,19 +7,19 @@ Aplicativo mobile para explorar filmes e séries, com dados em tempo real da API
 ## � Screenshots
 
 <p align="center">
-  <img src="./asserts/screenshots/login.jpeg" width="220" />
-  <img src="./asserts/screenshots/register.jpeg" width="220" />
-  <img src="./asserts/screenshots/reset.jpeg" width="220" />
+  <img src="./assets/screenshots/login.jpeg" width="220" />
+  <img src="./assets/screenshots/register.jpeg" width="220" />
+  <img src="./assets/screenshots/reset.jpeg" width="220" />
 </p>
 
 <p align="center">
-  <img src="./asserts/screenshots/filmes.jpeg" width="220" />
-  <img src="./asserts/screenshots/series.jpeg" width="220" />
-  <img src="./asserts/screenshots/details.jpeg" width="220" />
+  <img src="./assets/screenshots/filmes.jpeg" width="220" />
+  <img src="./assets/screenshots/series.jpeg" width="220" />
+  <img src="./assets/screenshots/details.jpeg" width="220" />
 
-  <img src="./asserts/screenshots/configuracoes.jpeg" width="220" />
+  <img src="./assets/screenshots/configuracoes.jpeg" width="220" />
 
-  <img src="./asserts/screenshots/navegacaoLateral.jpeg" width="220" />
+  <img src="./assets/screenshots/navegacaoLateral.jpeg" width="220" />
 </p>
 
 ---
