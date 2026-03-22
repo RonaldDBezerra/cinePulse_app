@@ -21,7 +21,7 @@ export default function ResetScreen() {
             setLoading(true);
             await resetPassword(email);
             Alert.alert("Sucesso", "Email de recuperação enviado!");
-            router.back();
+            router.navigate("/login");
         } catch (error) {
             console.error("Erro ao enviar email de recuperação:", error);
             Alert.alert("Erro", "Não foi possível enviar o email.");
@@ -71,7 +71,7 @@ export default function ResetScreen() {
                 </TouchableOpacity>
             </MotiView>
 
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity onPress={() => router.push("/login")}>
                 <Text style={styles.linkSecondary}>Voltar para login</Text>
             </TouchableOpacity>
 
