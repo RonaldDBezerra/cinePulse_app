@@ -92,7 +92,7 @@ export default function Filmes() {
     }
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: bottom + 10 }}>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container} contentContainerStyle={{ paddingBottom: bottom + 10 }}>
 
             <ContentCards
                 title="Filmes - Populares"
