@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { MotiView } from "moti";
 import React, { useState } from "react";
@@ -8,7 +9,8 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from "react-native";
 import { register } from "../services/auth";
 
@@ -16,6 +18,8 @@ export default function RegisterScreen({ navigation }: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -68,14 +72,19 @@ export default function RegisterScreen({ navigation }: any) {
         animate={{ opacity: 1, translateY: 0 }}
         transition={{ delay: 350, duration: 500 }}
       >
-        <TextInput
-          placeholder="Senha"
-          placeholderTextColor="#6B7280"
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+        <View style={styles.inputWrapper}>
+          <TextInput
+            placeholder="Senha"
+            placeholderTextColor="#6B7280"
+            style={styles.inputFlex}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity onPress={() => setShowPassword(v => !v)} style={styles.eyeButton}>
+            <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color="#6B7280" />
+          </TouchableOpacity>
+        </View>
       </MotiView>
 
       <MotiView
@@ -83,14 +92,19 @@ export default function RegisterScreen({ navigation }: any) {
         animate={{ opacity: 1, translateY: 0 }}
         transition={{ delay: 450, duration: 500 }}
       >
-        <TextInput
-          placeholder="Confirmar senha"
-          placeholderTextColor="#6B7280"
-          style={styles.input}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
+        <View style={styles.inputWrapper}>
+          <TextInput
+            placeholder="Confirmar senha"
+            placeholderTextColor="#6B7280"
+            style={styles.inputFlex}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry={!showConfirmPassword}
+          />
+          <TouchableOpacity onPress={() => setShowConfirmPassword(v => !v)} style={styles.eyeButton}>
+            <Ionicons name={showConfirmPassword ? "eye-off" : "eye"} size={20} color="#6B7280" />
+          </TouchableOpacity>
+        </View>
       </MotiView>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -109,7 +123,7 @@ export default function RegisterScreen({ navigation }: any) {
         </TouchableOpacity>
       </MotiView>
 
-      <TouchableOpacity onPress={() => router.back()}>
+      <TouchableOpacity onPress={() => router.push("/login")}>
         <Text style={styles.link}>Já tenho conta</Text>
       </TouchableOpacity>
 
@@ -138,6 +152,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     color: "#FFF",
     marginBottom: 16,
+  },
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#1C1C1C",
+    height: 52,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  inputFlex: {
+    flex: 1,
+    color: "#FFF",
+  },
+  eyeButton: {
+    padding: 4,
   },
   button: {
     backgroundColor: "#E50914",
