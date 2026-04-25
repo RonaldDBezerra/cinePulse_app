@@ -2,7 +2,7 @@
   "expo": {
     "name": "CinePulse",
     "slug": "cinepulse",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/Icon.png",
     "scheme": "stickersmash",
@@ -13,6 +13,7 @@
     },
     "android": {
       "edgeToEdgeEnabled": true,
+      "versionCode": 3,
       "package": "com.ronalddev.cinepulse"
     },
     "web": {
@@ -27,7 +28,7 @@
           "image": "./assets/images/splash.png",
           "resizeMode": "contain",
           "imageWidth": 200,
-          "backgroundColor": "#0F0F0F"
+          "backgroundColor": "#000000"
         }
       ],
       "expo-secure-store"
