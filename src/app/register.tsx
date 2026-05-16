@@ -1,3 +1,4 @@
+import { colors } from "@/styles/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { MotiView } from "moti";
@@ -34,6 +35,7 @@ export default function RegisterScreen({ navigation }: any) {
       setError("");
       await register(email, password);
       Alert.alert("Sucesso", "Conta criada com sucesso!");
+      router.replace("/login");
     } catch (err: any) {
       setError("Erro ao criar conta");
     } finally {
@@ -134,19 +136,19 @@ export default function RegisterScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0F0F0F",
+    backgroundColor: colors.background,
     justifyContent: "center",
     paddingHorizontal: 24,
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#E50914",
+    color: colors.primary,
     textAlign: "center",
     marginBottom: 40,
   },
   input: {
-    backgroundColor: "#1C1C1C",
+    backgroundColor: colors.card,
     height: 52,
     borderRadius: 12,
     paddingHorizontal: 16,
@@ -156,7 +158,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1C1C1C",
+    backgroundColor: colors.card,
     height: 52,
     borderRadius: 12,
     paddingHorizontal: 16,
@@ -164,13 +166,13 @@ const styles = StyleSheet.create({
   },
   inputFlex: {
     flex: 1,
-    color: "#FFF",
+    color: colors.white,
   },
   eyeButton: {
     padding: 4,
   },
   button: {
-    backgroundColor: "#E50914",
+    backgroundColor: colors.primary,
     height: 52,
     borderRadius: 12,
     justifyContent: "center",
@@ -178,12 +180,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
-    color: "#FFF",
+    color: colors.white,
     fontWeight: "bold",
     fontSize: 16,
   },
   link: {
-    color: "#FFF",
+    color: colors.white,
     textAlign: "center",
     marginTop: 24,
   },
