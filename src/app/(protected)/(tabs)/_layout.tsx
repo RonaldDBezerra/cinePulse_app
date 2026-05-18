@@ -34,7 +34,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          title: "Pesquisar",
+          title: "Buscar",
           tabBarIcon: SearchIcon,
         }}
       />

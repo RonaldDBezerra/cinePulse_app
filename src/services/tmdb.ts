@@ -46,3 +46,9 @@ export const getSerieDetails = (id: number) =>
 
 export const getSerieProviders = (id: number) =>
     api.get(`/tv/${id}/watch/providers`);
+
+export const searchMovies = (query: string, page = 1) =>
+    api.get("/search/movie", { params: { query, page } });
+
+export const searchTv = (query: string, page = 1) =>
+    api.get("/search/tv", { params: { query, page } });
