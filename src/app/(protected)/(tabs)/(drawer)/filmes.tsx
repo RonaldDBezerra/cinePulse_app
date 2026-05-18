@@ -1,6 +1,5 @@
 import ContentCards from "@/components/ContentCards"
 import HomeSkeleton from "@/components/HomeSkeleton"
-import Separator from "@/components/Separator"
 import { getMovingNowPlaying, getTopRated, getTrending } from "@/services/tmdb"
 import { colors } from "@/styles/colors"
 import { useEffect, useState } from "react"
@@ -101,16 +100,12 @@ export default function Filmes() {
                 category="movie"
             />
 
-            <Separator />
-
             <ContentCards
                 title="Filmes - Bem avaliados"
                 data={ratedMovies}
                 loadMore={loadMoreRatedMovies}
                 category="movie"
             />
-
-            <Separator />
 
             <ContentCards
                 title="Filmes - Em exibição"

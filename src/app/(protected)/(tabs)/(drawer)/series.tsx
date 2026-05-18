@@ -1,6 +1,5 @@
 import ContentCards from "@/components/ContentCards"
 import HomeSkeleton from "@/components/HomeSkeleton"
-import Separator from "@/components/Separator"
 import { getSeriesNowPlaying, getTopRatedSeries, getTrendingSeries } from "@/services/tmdb"
 import { colors } from "@/styles/colors"
 import { useEffect, useState } from "react"
@@ -102,16 +101,12 @@ export default function SeriesScreen() {
                 category="serie"
             />
 
-            <Separator />
-
             <ContentCards
                 title="Series - Bem avaliadas"
                 data={ratedSeries}
                 loadMore={loadMoreRatedSeries}
                 category="serie"
             />
-
-            <Separator />
 
             <ContentCards
                 title="Series - Em exibição"

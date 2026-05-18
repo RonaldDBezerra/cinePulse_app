@@ -50,14 +50,13 @@ export default function HorizontalCardList({ title, data, category, onEndReached
 const styles = StyleSheet.create({
     header: {
         color: colors.text,
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: "bold",
-        marginBottom: 16,
+        marginBottom: 10,
     },
     card: {
         width: 120,
         height: 180,
-        marginBottom: 16,
         marginRight: 12,
     },
     poster: {
