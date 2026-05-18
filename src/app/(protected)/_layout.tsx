@@ -23,7 +23,7 @@ export default function ProtectedLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack screenOptions={{ headerShown: false, animation: "none", contentStyle: { backgroundColor: colors.background } }}>
-        <Stack.Screen name="(drawer)" />
+        <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(stack_routes)" />
       </Stack>
     </GestureHandlerRootView>

@@ -17,9 +17,9 @@ type MenuItem = {
 };
 
 const menuItems: MenuItem[] = [
-    { label: "Filmes", icon: "🎬", route: "/(protected)/(drawer)/filmes" },
-    { label: "Séries", icon: "📺", route: "/(protected)/(drawer)/series" },
-    { label: "Configurações", icon: "⚙️", route: "/(protected)/(drawer)/settings" },
+    { label: "Filmes", icon: "🎬", route: "/(protected)/(tabs)/(drawer)/filmes" },
+    { label: "Séries", icon: "📺", route: "/(protected)/(tabs)/(drawer)/series" },
+    { label: "Configurações", icon: "⚙️", route: "/(protected)/(tabs)/(drawer)/settings" },
 ];
 
 export default function CustomDrawer(props: DrawerContentComponentProps) {
