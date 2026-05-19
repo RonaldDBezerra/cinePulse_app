@@ -1,8 +1,9 @@
 import ContentCards from "@/components/ContentCards"
 import HomeSkeleton from "@/components/HomeSkeleton"
+import { ContentSection, usePagedContent } from "@/hooks/usePagedContent"
 import { getMovingNowPlaying, getTopRated, getTrending } from "@/services/tmdb"
 import { colors } from "@/styles/colors"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import {
     ScrollView,
     StyleSheet
@@ -10,109 +11,36 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 
+const sections: ContentSection[] = [
+    { title: "Filmes - Populares", category: "movie", fetchFn: getTrending },
+    { title: "Filmes - Bem avaliados", category: "movie", fetchFn: getTopRated },
+    { title: "Filmes - Em exibição", category: "movie", fetchFn: getMovingNowPlaying },
+]
+
 export default function Filmes() {
-
-    const [topMovies, setTopMovies] = useState<any[]>([])
-    const [pageTopMovies, setPageTopMovies] = useState(1)
-
-    const [ratedMovies, setRatedMovies] = useState<any[]>([])
-    const [pageRatedMovies, setPageRatedMovies] = useState(1)
-
-    const [nowPlayingMovies, setNowPlayingMovies] = useState<any[]>([])
-    const [pageNowPlayingMovies, setPageNowPlayingMovies] = useState(1)
-
-    const [loading, setLoading] = useState(true)
-
     const { bottom } = useSafeAreaInsets();
-
-    async function loadTopMovies(nextPage = 1) {
-        const { data } = await getTrending(nextPage)
-
-        if (nextPage === 1) {
-            setTopMovies(data.results)
-        } else {
-            setTopMovies(prev => [...prev, ...data.results])
-        }
-    }
-
-    async function loadRatedMovies(nextPage = 1) {
-        const { data } = await getTopRated(nextPage)
-
-        if (nextPage === 1) {
-            setRatedMovies(data.results)
-        } else {
-            setRatedMovies(prev => [...prev, ...data.results])
-        }
-    }
-
-    async function loadNowPlayingMovies(nextPage = 1) {
-        const { data } = await getMovingNowPlaying(nextPage)
-
-        if (nextPage === 1) {
-            setNowPlayingMovies(data.results)
-        } else {
-            setNowPlayingMovies(prev => [...prev, ...data.results])
-        }
-    }
+    const { pagedSections, loading, initialize } = usePagedContent(sections)
 
     useEffect(() => {
-        async function fetchData() {
-            await Promise.all([
-                loadTopMovies(),
-                loadRatedMovies(),
-                loadNowPlayingMovies()
-            ]);
-            setLoading(false);
-        }
-
-        fetchData();
+        initialize()
     }, [])
-
-    function loadMoreTopMovies() {
-        const next = pageTopMovies + 1
-        setPageTopMovies(next)
-        loadTopMovies(next)
-    }
-
-    function loadMoreRatedMovies() {
-        const next = pageRatedMovies + 1
-        setPageRatedMovies(next)
-        loadRatedMovies(next)
-    }
-
-    function loadMoreNowPlayingMovies() {
-        const next = pageNowPlayingMovies + 1
-        setPageNowPlayingMovies(next)
-        loadNowPlayingMovies(next)
-    }
 
     if (loading) {
         return <HomeSkeleton />
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.container} contentContainerStyle={{ paddingBottom: bottom + 10 }}>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container} contentContainerStyle={{ paddingBottom: bottom }}>
 
-            <ContentCards
-                title="Filmes - Populares"
-                data={topMovies}
-                loadMore={loadMoreTopMovies}
-                category="movie"
-            />
-
-            <ContentCards
-                title="Filmes - Bem avaliados"
-                data={ratedMovies}
-                loadMore={loadMoreRatedMovies}
-                category="movie"
-            />
-
-            <ContentCards
-                title="Filmes - Em exibição"
-                data={nowPlayingMovies}
-                loadMore={loadMoreNowPlayingMovies}
-                category="movie"
-            />
+            {pagedSections.map((section) => (
+                <ContentCards
+                    key={section.title}
+                    title={section.title}
+                    data={section.data}
+                    loadMore={section.loadMore}
+                    category={section.category}
+                />
+            ))}
 
         </ScrollView>
     )

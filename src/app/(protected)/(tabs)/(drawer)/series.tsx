@@ -1,8 +1,9 @@
 import ContentCards from "@/components/ContentCards"
 import HomeSkeleton from "@/components/HomeSkeleton"
+import { ContentSection, usePagedContent } from "@/hooks/usePagedContent"
 import { getSeriesNowPlaying, getTopRatedSeries, getTrendingSeries } from "@/services/tmdb"
 import { colors } from "@/styles/colors"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import {
     ScrollView,
     StyleSheet
@@ -10,110 +11,36 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 
+const sections: ContentSection[] = [
+    { title: "Series - Populares", category: "serie", fetchFn: getTrendingSeries },
+    { title: "Series - Bem avaliadas", category: "serie", fetchFn: getTopRatedSeries },
+    { title: "Series - Em exibição", category: "serie", fetchFn: getSeriesNowPlaying },
+]
+
 export default function SeriesScreen() {
-
-    const [trendingSeries, setTrendingSeries] = useState<any[]>([])
-    const [pageTrendingSeries, setPageTrendingSeries] = useState(1)
-
-    const [ratedSeries, setRatedSeries] = useState<any[]>([])
-    const [pageRatedSeries, setPageRatedSeries] = useState(1)
-
-    const [airingTodaySeries, setAiringTodaySeries] = useState<any[]>([])
-    const [pageAiringTodaySeries, setPageAiringTodaySeries] = useState(1)
-
-    const [loading, setLoading] = useState(true)
-
     const { bottom } = useSafeAreaInsets();
-
-
-    async function loadTrendingSeries(nextPage = 1) {
-        const { data } = await getTrendingSeries(nextPage)
-
-        if (nextPage === 1) {
-            setTrendingSeries(data.results)
-        } else {
-            setTrendingSeries(prev => [...prev, ...data.results])
-        }
-    }
-
-    async function loadRatedSeries(nextPage = 1) {
-        const { data } = await getTopRatedSeries(nextPage)
-
-        if (nextPage === 1) {
-            setRatedSeries(data.results)
-        } else {
-            setRatedSeries(prev => [...prev, ...data.results])
-        }
-    }
-
-    async function loadAiringTodaySeries(nextPage = 1) {
-        const { data } = await getSeriesNowPlaying(nextPage)
-
-        if (nextPage === 1) {
-            setAiringTodaySeries(data.results)
-        } else {
-            setAiringTodaySeries(prev => [...prev, ...data.results])
-        }
-    }
+    const { pagedSections, loading, initialize } = usePagedContent(sections)
 
     useEffect(() => {
-        async function fetchData() {
-            await Promise.all([
-                loadTrendingSeries(),
-                loadRatedSeries(),
-                loadAiringTodaySeries()
-            ]);
-            setLoading(false);
-        }
-        fetchData();
+        initialize()
     }, [])
-
-
-    function loadMoreTrendingSeries() {
-        const next = pageTrendingSeries + 1
-        setPageTrendingSeries(next)
-        loadTrendingSeries(next)
-    }
-
-    function loadMoreRatedSeries() {
-        const next = pageRatedSeries + 1
-        setPageRatedSeries(next)
-        loadRatedSeries(next)
-    }
-
-    function loadMoreAiringTodaySeries() {
-        const next = pageAiringTodaySeries + 1
-        setPageAiringTodaySeries(next)
-        loadAiringTodaySeries(next)
-    }
 
     if (loading) {
         return <HomeSkeleton />
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.container} contentContainerStyle={{ paddingBottom: bottom + 10 }}>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container} contentContainerStyle={{ paddingBottom: bottom }}>
 
-            <ContentCards
-                title="Series - Populares"
-                data={trendingSeries}
-                loadMore={loadMoreTrendingSeries}
-                category="serie"
-            />
-
-            <ContentCards
-                title="Series - Bem avaliadas"
-                data={ratedSeries}
-                loadMore={loadMoreRatedSeries}
-                category="serie"
-            />
-
-            <ContentCards
-                title="Series - Em exibição"
-                data={airingTodaySeries}
-                loadMore={loadMoreAiringTodaySeries}
-                category="serie"
-            />
+            {pagedSections.map((section) => (
+                <ContentCards
+                    key={section.title}
+                    title={section.title}
+                    data={section.data}
+                    loadMore={section.loadMore}
+                    category={section.category}
+                />
+            ))}
 
         </ScrollView>
     )
