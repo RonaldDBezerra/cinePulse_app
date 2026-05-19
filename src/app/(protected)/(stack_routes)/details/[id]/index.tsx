@@ -1,147 +1,421 @@
-import React, { useEffect, useState } from "react";
+import React, {
+    useEffect,
+    useState
+} from "react";
+
 import {
+    FlatList,
     Image,
+    Pressable,
     ScrollView,
     StyleSheet,
     Text,
     View
 } from "react-native";
 
-import { BACKDROP_BASE, getMovieDetails, getMovieProviders, getSerieDetails, getSerieProviders, IMAGE_BASE } from "@/services/tmdb";
+import {
+    BACKDROP_BASE,
+    getMovieDetails,
+    getMovieProviders,
+    getSerieDetails,
+    getSerieProviders,
+    getSerieRatingsGrid,
+    IMAGE_BASE,
+} from "@/services/tmdb";
 
 import { BlurView } from "expo-blur";
+
 import { LinearGradient } from "expo-linear-gradient";
 
 import { colors } from "@/styles/colors";
+
 import { useLocalSearchParams } from "expo-router";
+
 import Animated, { FadeInUp } from "react-native-reanimated";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import DetailsSkeleton from "@/components/DetailsSkeleton";
-import { FlatList } from "react-native-gesture-handler";
+import { SeasonGrid } from "@/types/services-types";
+
+interface IStatusTranslation extends Record<string, string> {
+    "Returning Series": "Retorno da série";
+    "Ended": "Finalizada";
+    "Released": "Lançado recentemente";
+    "Post Production": "Em pós-produção";
+}
 
 export default function DetailsScreen() {
-    const { id, category } = useLocalSearchParams();
-    const { bottom } = useSafeAreaInsets();
-    const [data, setData] = useState<any>(null);
-    const [dataProviders, setDataProviders] = useState<any>(null);
 
-    async function loadMovieDetails() {
-        if (category === "movie") {
-            const { data } = await getMovieDetails(Number(id));
+    const { id, category } =
+        useLocalSearchParams();
 
-            const providers = await getMovieProviders(Number(id));
+    const { bottom } =
+        useSafeAreaInsets();
 
-            setDataProviders(providers.data.results?.BR);
-            setData(data);
-        } else if (category === "serie") {
-            const { data } = await getSerieDetails(Number(id));
-            const providers = await getSerieProviders(Number(id));
+    const [data, setData] =
+        useState<any>(null);
 
-            setDataProviders(providers.data.results?.BR);
-            setData(data);
+    const [providers, setProviders] =
+        useState<any>(null);
+
+    const [ratingsGrid, setRatingsGrid] =
+        useState<SeasonGrid[]>([]);
+
+    const [expandedSeasons,
+        setExpandedSeasons] =
+        useState<number[]>([1]);
+
+    const statusTranslation: IStatusTranslation = {
+        "Returning Series": "Retorno da série",
+        "Ended": "Finalizada",
+        "Released": "Lançado recentemente",
+        "Post Production": "Em pós-produção",
+    }
+
+    async function loadDetails() {
+
+        try {
+
+            if (category === "movie") {
+
+                const { data } =
+                    await getMovieDetails(
+                        Number(id)
+                    );
+
+                const providers =
+                    await getMovieProviders(
+                        Number(id)
+                    );
+
+                setProviders(
+                    providers.data.results?.BR
+                );
+
+                setData(data);
+
+            } else {
+
+                const [
+                    details,
+                    providers,
+                    ratings
+                ] = await Promise.all([
+                    getSerieDetails(Number(id)),
+                    getSerieProviders(Number(id)),
+                    getSerieRatingsGrid(Number(id))
+                ]);
+
+                setProviders(
+                    providers.data.results?.BR
+                );
+
+                setRatingsGrid(ratings);
+
+                setData(details.data);
+            }
+
+        } catch (err) {
+            console.log(err);
         }
     }
 
     useEffect(() => {
-        loadMovieDetails();
+        loadDetails();
     }, []);
 
-    if (!data) return <DetailsSkeleton />;
+    function toggleSeason(
+        seasonNumber: number
+    ) {
+
+        setExpandedSeasons(prev => {
+
+            if (prev.includes(seasonNumber)) {
+
+                return prev.filter(
+                    item => item !== seasonNumber
+                );
+            }
+
+            return [...prev, seasonNumber];
+        });
+    }
+
+    function getRatingColor(
+        rating: number
+    ) {
+
+        if (rating >= 9)
+            return "#0B8F55";
+
+        if (rating >= 8)
+            return "#22C55E";
+
+        if (rating >= 7)
+            return "#84CC16";
+
+        if (rating >= 6)
+            return "#EAB308";
+
+        return "#EF4444";
+    }
+
+    function InfoRow({
+        label,
+        value
+    }: {
+        label: string;
+        value: string;
+    }) {
+
+        return (
+            <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>
+                    {label}
+                </Text>
+
+                <Text style={styles.infoValue}>
+                    {value}
+                </Text>
+            </View>
+        );
+    }
+
+    if (!data)
+        return <DetailsSkeleton />;
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.container} contentContainerStyle={{ paddingBottom: bottom + 10 }}>
+        <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.container}
+            contentContainerStyle={{
+                paddingBottom: bottom + 40
+            }}
+        >
 
             <View style={styles.backdropContainer}>
+
                 <Image
-                    source={{ uri: BACKDROP_BASE + data.backdrop_path }}
+                    source={{
+                        uri:
+                            BACKDROP_BASE +
+                            data.backdrop_path
+                    }}
                     style={styles.backdrop}
                 />
 
                 <LinearGradient
-                    colors={["transparent", "#0F0F0F"]}
+                    colors={[
+                        "transparent",
+                        "#0e0d0d"
+                    ]}
                     style={styles.gradient}
                 />
             </View>
 
             <Animated.View
-                entering={FadeInUp.duration(600)}
+                entering={FadeInUp.duration(500)}
                 style={styles.headerContent}
             >
-                <BlurView intensity={40} style={styles.posterContainer}>
+
+                <BlurView
+                    intensity={40}
+                    style={styles.posterContainer}
+                >
+
                     <Image
-                        source={{ uri: IMAGE_BASE + data.poster_path }}
+                        source={{
+                            uri:
+                                IMAGE_BASE +
+                                data.poster_path
+                        }}
                         style={styles.poster}
                     />
                 </BlurView>
 
                 <View style={styles.movieInfo}>
-                    <Text style={styles.title}>{data.title}</Text>
+
+                    <Text style={styles.title}>
+                        {data.title || data.name}
+                    </Text>
 
                     <Text style={styles.meta}>
-                        ⭐ {data.vote_average.toFixed(1)} {(category === "movie") && `• ${data.release_date?.slice(0, 4)}`}
+                        ⭐ {data.vote_average.toFixed(1)}
                     </Text>
 
                     <Text style={styles.genre}>
-                        {data.genres?.map((g: any) => g.name).join(" / ")}
+                        {data.genres
+                            ?.map((g: any) => g.name)
+                            .join(" / ")}
                     </Text>
 
-                    <View style={{ flexDirection: "row", marginTop: 5, alignItems: "center" }}>
-                        <FlatList
-                            horizontal
-                            data={dataProviders?.flatrate}
-                            showsHorizontalScrollIndicator={false}
-                            keyExtractor={(item) => item.provider_id.toString()}
-                            renderItem={({ item: provider }) => (
-                                <Image
-                                    key={provider.provider_id}
-                                    source={{ uri: IMAGE_BASE + provider.logo_path }}
-                                    style={{ width: 40, height: 40, marginRight: 8 }}
-                                />
-                            )}
-                        />
-                    </View>
+                    <FlatList
+                        horizontal
+                        data={providers?.flatrate}
+                        keyExtractor={(item) =>
+                            item.provider_id.toString()
+                        }
+                        showsHorizontalScrollIndicator={
+                            false
+                        }
+                        contentContainerStyle={{
+                            marginTop: 10
+                        }}
+                        renderItem={({ item }) => (
+                            <Image
+                                source={{
+                                    uri:
+                                        IMAGE_BASE +
+                                        item.logo_path
+                                }}
+                                style={styles.providerLogo}
+                            />
+                        )}
+                    />
                 </View>
             </Animated.View>
 
             <Animated.View
-                entering={FadeInUp.delay(200).duration(600)}
+                entering={FadeInUp.delay(100)}
                 style={styles.section}
             >
-                <Text style={styles.sectionTitle}>Sinopse</Text>
+
+                <Text style={styles.sectionTitle}>
+                    Sinopse
+                </Text>
 
                 <Text style={styles.overview}>
                     {data.overview}
                 </Text>
             </Animated.View>
 
+            {category === "serie" && (
+                <Animated.View
+                    entering={FadeInUp.delay(200)}
+                    style={styles.section}
+                >
+
+                    <Text style={styles.sectionTitle}>
+                        Avaliações por temporada
+                    </Text>
+
+                    {ratingsGrid.map((season) => {
+
+                        const isExpanded =
+                            expandedSeasons.includes(
+                                season.season
+                            );
+
+                        return (
+                            <View
+                                key={season.season}
+                                style={styles.seasonContainer}
+                            >
+
+                                <Pressable
+                                    onPress={() =>
+                                        toggleSeason(
+                                            season.season
+                                        )
+                                    }
+                                    style={styles.seasonHeader}
+                                >
+
+                                    <Text
+                                        style={styles.seasonTitle}
+                                    >
+                                        Temporada{" "}
+                                        {season.season}
+                                    </Text>
+
+                                    <Text
+                                        style={styles.expandText}
+                                    >
+                                        {isExpanded
+                                            ? "Ocultar"
+                                            : "Mostrar"}
+                                    </Text>
+                                </Pressable>
+
+                                {isExpanded && (
+
+                                    <View style={styles.grid}>
+
+                                        {season.episodes.map(
+                                            (ep) => (
+
+                                                <View
+                                                    key={ep.episode}
+                                                    style={[
+                                                        styles.ratingBox,
+                                                        {
+                                                            backgroundColor:
+                                                                getRatingColor(
+                                                                    ep.rating
+                                                                )
+                                                        }
+                                                    ]}
+                                                >
+
+                                                    <Text
+                                                        style={
+                                                            styles.episodeNumber
+                                                        }
+                                                    >
+                                                        E{ep.episode}
+                                                    </Text>
+
+                                                    <Text
+                                                        style={
+                                                            styles.ratingText
+                                                        }
+                                                    >
+                                                        {ep.rating.toFixed(
+                                                            1
+                                                        )}
+                                                    </Text>
+                                                </View>
+                                            )
+                                        )}
+                                    </View>
+                                )}
+                            </View>
+                        );
+                    })}
+                </Animated.View>
+            )}
+
             <Animated.View
-                entering={FadeInUp.delay(300).duration(600)}
+                entering={FadeInUp.delay(300)}
                 style={styles.section}
             >
-                {(category === "movie") ?
-                    <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Duração:</Text>
-                        <Text style={styles.infoValue}>{data.runtime} min</Text>
-                    </View> :
 
-                    <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Numero de Eps:</Text>
-                        <Text style={styles.infoValue}>{data.number_of_episodes} eps</Text>
-                    </View>
-                }
+                {category === "movie" ? (
 
-                <View style={styles.infoRow}>
-                    <Text style={styles.infoLabel}>Status:</Text>
-                    <Text style={styles.infoValue}>{data.status}</Text>
-                </View>
+                    <InfoRow
+                        label="Duração"
+                        value={`${data.runtime} min`}
+                    />
 
-                <View style={styles.infoRow}>
-                    <Text style={styles.infoLabel}>Idioma:</Text>
-                    <Text style={styles.infoValue}>{data.original_language}</Text>
-                </View>
+                ) : (
+
+                    <InfoRow
+                        label="Episódios"
+                        value={`${data.number_of_episodes}`}
+                    />
+                )}
+
+                <InfoRow
+                    label="Status"
+                    value={statusTranslation[data.status] || data.status}
+                />
+
+                <InfoRow
+                    label="Idioma"
+                    value={data.original_language}
+                />
             </Animated.View>
-
         </ScrollView>
     );
 }
@@ -150,8 +424,8 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: colors.background,
-        paddingBottom: 20
+        backgroundColor:
+            colors.background
     },
 
     backdropContainer: {
@@ -213,28 +487,85 @@ const styles = StyleSheet.create({
         color: "#B0B0B0"
     },
 
+    providerLogo: {
+        width: 42,
+        height: 42,
+        borderRadius: 12,
+        marginRight: 8
+    },
+
     section: {
         paddingHorizontal: 20,
-        marginBottom: 24
+        marginBottom: 26
     },
 
     sectionTitle: {
         fontSize: 18,
         fontWeight: "bold",
         color: colors.white,
-        marginBottom: 10
+        marginBottom: 14
     },
 
     overview: {
         fontSize: 15,
         color: "#CFCFCF",
-        lineHeight: 22
+        lineHeight: 24
+    },
+
+    seasonContainer: {
+        marginBottom: 20
+    },
+
+    seasonHeader: {
+        flexDirection: "row",
+        justifyContent:
+            "space-between",
+        alignItems: "center",
+        marginBottom: 14
+    },
+
+    seasonTitle: {
+        color: colors.white,
+        fontSize: 16,
+        fontWeight: "bold"
+    },
+
+    expandText: {
+        color: "#888",
+        fontSize: 13
+    },
+
+    grid: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 8
+    },
+
+    ratingBox: {
+        width: 58,
+        height: 58,
+        borderRadius: 16,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
+    episodeNumber: {
+        color: "#fff",
+        fontSize: 11,
+        opacity: 0.8
+    },
+
+    ratingText: {
+        color: "#fff",
+        fontSize: 15,
+        fontWeight: "bold"
     },
 
     infoRow: {
         flexDirection: "row",
-        justifyContent: "space-between",
-        paddingVertical: 8,
+        justifyContent:
+            "space-between",
+        paddingVertical: 10,
         borderBottomWidth: 1,
         borderBottomColor: "#222"
     },
@@ -247,5 +578,5 @@ const styles = StyleSheet.create({
     infoValue: {
         color: colors.white,
         fontSize: 14
-    },
+    }
 });
